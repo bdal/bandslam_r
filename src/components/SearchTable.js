@@ -18,8 +18,9 @@ export function MuiComboBox() {
       disablePortal
       id="combo-box-demo"
       options={top100Films}
-      sx={{ width: '30%' }}
-      renderInput={(params) => <TextField {...params} label="Search Gig" />}
+      sx={{ width: '30%'
+    }}
+      renderInput={(params) => <TextField {...params} label="Search Gig"  />}
     />
   );
 }

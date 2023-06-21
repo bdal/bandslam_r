@@ -46,7 +46,7 @@ function Heading({ video }) {
   return (
     <Grid container alignItems={'center'} direction={'column'}>
       <Grid>
-        <Typography variant='h5' color={'primary'}>
+        <Typography variant='h5' >
           <p>{video.artistName} - {video.venueName}</p>
         </Typography>
       </Grid>
@@ -57,8 +57,9 @@ function Heading({ video }) {
 function Timeline({ video }) {
   return (
     <Grid container alignItems={'center'} direction={'column'}>
-      <p>{new Date(video.date).toDateString()}</p>
-    </Grid>
+      <Typography variant='h6' ><p>{new Date(video.date).toDateString()}</p>
+    </Typography>
+    </Grid >
   )
 }
 
@@ -66,16 +67,18 @@ function Timeline({ video }) {
 
 function App() {
   return (
-    <Grid container direction={'column'} justifyContent={'center'} alignItems={'center'} 
-    sx={{
-      minHeight: '100vh'
-    }} >
-      
-      <SearchTable />
-      <Heading video={Videos[0]} />
-      <VideoTable videos={Videos[0]} />
-      <Timeline video={Videos[0]} />
-    </Grid>
+    <div className='Default'>
+      <Grid container direction={'column'} justifyContent={'center'} alignItems={'center'}
+        sx={{
+          minHeight: '100vh'
+        }} >
+
+        <SearchTable />
+        <Heading video={Videos[0]} />
+        <VideoTable videos={Videos[0]} />
+        <Timeline video={Videos[0]} />
+      </Grid>
+    </div>
   );
 }
 
