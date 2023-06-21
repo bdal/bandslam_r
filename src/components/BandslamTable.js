@@ -4,14 +4,17 @@ import SearchTable from './SearchTable'
 import MediaTable from './MediaTable'
 import TimelineTable from './TimelineTable'
 
-const BandslamTable = ({videos}) => {
+
+
+
+const BandslamTable = ({ videos }) => {
   return (
     <div>
-        <SearchTable/>
-        <MediaTable videos={videos}/>
-        <TimelineTable/>
+      <SearchTable />
+      <MediaTable videos={videos} />
+      <TimelineTable />
     </div>
-    
+
   )
 }
 
