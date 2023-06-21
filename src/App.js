@@ -15,6 +15,15 @@ import Grid from '@mui/material/Grid'; // Grid version 1
 import Container from '@mui/material/Container';
 import { Typography } from '@mui/material';
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
 const Videos = [
   {
     "artistName": "Rage Against the Machine",
@@ -67,6 +76,8 @@ function Timeline({ video }) {
 
 function App() {
   return (
+    <ThemeProvider theme={darkTheme}>
+    <CssBaseline />
     <div className='Default'>
       <Grid container direction={'column'} justifyContent={'center'} alignItems={'center'}
         sx={{
@@ -78,7 +89,8 @@ function App() {
         <VideoTable videos={Videos[0]} />
         <Timeline video={Videos[0]} />
       </Grid>
-    </div>
+      </div>
+    </ThemeProvider>
   );
 }
 
