@@ -6,6 +6,7 @@ import 'vidstack/styles/community-skin/video.css';
 import { MediaCommunitySkin, MediaOutlet, MediaPlayer } from '@vidstack/react';
 import { Grid } from '@mui/material';
 import Box from '@mui/material/Box';
+import { blue } from '@mui/material/colors';
 
 function VideoPlayer({ videos }) {
   return (
@@ -42,17 +43,20 @@ function VideoPlayer({ videos }) {
 //        </MediaPlayer>
 //      );
 //}
+const handlePopOver = (event) => {
+  console.log('test test'); //to do insert 'playing here.
+}
 
 const VideoTable = ({ videos }) => {
   return (
-    <Grid container alignItems={'center'} direction={'column'}>
-    <Box sx={{
+    // <Grid container alignItems={'center'} direction={'column'}>
+    <Box onMouseEnter={handlePopOver} sx={{
       width: 600,
-      height: 600
+      height: 338
     }}>
-      <VideoPlayer videos={videos} />
+      <VideoPlayer on videos={videos} />
     </Box>
-    </Grid>
+    // </Grid>
   )
 }
 

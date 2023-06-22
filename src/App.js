@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 
-import Button from './components/Button';
+// import Button from './components/Button';
 import BandslamTable from './components/BandslamTable';
 import StackSandbox from './components/StackSandbox';
 import GridSandbox from './components/GridSandbox';
@@ -14,6 +14,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid'; // Grid version 1
 import Container from '@mui/material/Container';
 import { Typography } from '@mui/material';
+import Button from '@mui/material/Button';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -67,28 +68,45 @@ function Timeline({ video }) {
   return (
     <Grid container alignItems={'center'} direction={'column'}>
       <Typography variant='h6' ><p>{new Date(video.date).toDateString()}</p>
-    </Typography>
+      </Typography>
     </Grid >
   )
 }
+
+function handleNextClick() {
+  alert('next')
+}
+
 
 //first attempt
 
 function App() {
   return (
     <ThemeProvider theme={darkTheme}>
-    <CssBaseline />
-    <div className='Default'>
-      <Grid container direction={'column'} justifyContent={'center'} alignItems={'center'}
-        sx={{
-          minHeight: '100vh'
-        }} >
+      <CssBaseline />
+      <div className='Default'>
+        <Grid container direction={'column'} justifyContent={'center'} alignItems={'center'}
+          sx={{
+            minHeight: '100vh'
+          }} >
 
-        <SearchTable />
-        <Heading video={Videos[0]} />
-        <VideoTable videos={Videos[0]} />
-        <Timeline video={Videos[0]} />
-      </Grid>
+          <SearchTable />
+          <Heading video={Videos[0]} />
+          <Grid container direction={'row'} justifyContent={'center'}>
+            <Button
+              sx={{
+                height:50
+              }}
+              variant='outlined'>Prev</Button>
+            <VideoTable videos={Videos[0]} />
+            <Button sx={{
+                height:50
+              }}
+              variant='outlined'
+              onClick={handleNextClick}>Next</Button>
+          </Grid>
+          <Timeline video={Videos[0]} />
+        </Grid>
       </div>
     </ThemeProvider>
   );
