@@ -76,9 +76,17 @@ function Timeline({ video }) {
   )
 }
 
-
-
-//first attempt
+function NavBox({ children }) {
+  return (
+    <Box sx={{
+      display: 'flex',
+      alignItems: 'center',
+      p: 1,
+      m: 1
+    }}>{children}
+    </Box>
+  )
+}
 
 function App() {
   const [index, setIndex] = useState(0);
@@ -89,6 +97,19 @@ function App() {
 
   function handlePrevClick() {
     setIndex(index - 1)
+  }
+
+  function NavButton({ onClick, disabled, children }) {
+    return (
+      <Button
+        sx={{
+          height: 50
+        }}
+        variant='outlined'
+        onClick={onClick}
+        disabled={disabled}>{children}
+      </Button>
+    )
   }
 
   let video = Videos[index];
@@ -102,40 +123,24 @@ function App() {
           sx={{
             minHeight: '100vh'
           }} >
-
           <SearchTable />
           <Heading video={video} />
           <Grid container direction={'row'} justifyContent={'center'}>
-            {/* className='border d-flex align-items-center justify-content-center'> */}
-            <Box sx={{
-              display: 'flex',
-              alignItems: 'center',
-              p: 1,
-              m: 1
-            }}>
-              <Button
-                sx={{
-                  height: 50
-                }}
-                variant='outlined'
+            <NavBox>
+              <NavButton
                 onClick={handlePrevClick}
-                disabled={index == 0}>Prev
-              </Button>
-            </Box>
+                disabled={index == 0}>
+                Prev
+              </NavButton>
+            </NavBox>
             <VideoTable videos={video} />
-            <Box sx={{
-              display: 'flex',
-              alignItems: 'center',
-              p: 1,
-              m: 1
-            }}>
-              <Button sx={{
-                height: 50
-              }}
-                variant='outlined'
+            <NavBox>
+              <NavButton
                 onClick={handleNextClick}
-                disabled={index == (Videos.length - 1)}>Next</Button>
-            </Box>
+                disabled={index == (Videos.length - 1)}>
+                Next
+              </NavButton>
+            </NavBox>
           </Grid>
           <Timeline video={video} />
         </Grid>
