@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
 
 // import Button from './components/Button';
 import BandslamTable from './components/BandslamTable';
@@ -36,7 +37,8 @@ const Videos = [
     "path": "C:\\\\src\\\\0_bd\\\\cs\\\\bandslam\\\\vid",
     "songName": "People of the Sun",
     "venueName": "Finsbury Park",
-    "videoName": "06062010064 - RATM - People of the Sun.mp4"
+    "videoName": "06062010064 - RATM - People of the Sun.mp4",
+    "src": "http://127.0.0.1:5500/06062010064_conv.mp4"
   },
   {
     "artistName": "Vampire Weekend",
@@ -48,7 +50,8 @@ const Videos = [
     "path": "C:\\\\src\\\\0_bd\\\\cs\\\\bandslam\\\\vid",
     "songName": "A-Punk",
     "venueName": "Alexandra Palace",
-    "videoName": "03122010140 - Vampire Weekend - A-Punk.mp4"
+    "videoName": "03122010140 - Vampire Weekend - A-Punk.mp4",
+    "src": "http://127.0.0.1:5500/03122010140_conv.mp4"
   }
 ]
 
@@ -73,14 +76,24 @@ function Timeline({ video }) {
   )
 }
 
-function handleNextClick() {
-  alert('next')
-}
 
 
 //first attempt
 
 function App() {
+  const [index, setIndex] = useState(0);
+
+  function handleNextClick() {
+    setIndex(index + 1)
+  }
+
+  function handlePrevClick() {
+    setIndex(index - 1)
+  }
+
+  let video = Videos[index];
+  console.log('length ' + Videos.length)
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
@@ -91,21 +104,40 @@ function App() {
           }} >
 
           <SearchTable />
-          <Heading video={Videos[0]} />
+          <Heading video={video} />
           <Grid container direction={'row'} justifyContent={'center'}>
-            <Button
-              sx={{
-                height:50
+            {/* className='border d-flex align-items-center justify-content-center'> */}
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              p: 1,
+              m: 1
+            }}>
+              <Button
+                sx={{
+                  height: 50
+                }}
+                variant='outlined'
+                onClick={handlePrevClick}
+                disabled={index == 0}>Prev
+              </Button>
+            </Box>
+            <VideoTable videos={video} />
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              p: 1,
+              m: 1
+            }}>
+              <Button sx={{
+                height: 50
               }}
-              variant='outlined'>Prev</Button>
-            <VideoTable videos={Videos[0]} />
-            <Button sx={{
-                height:50
-              }}
-              variant='outlined'
-              onClick={handleNextClick}>Next</Button>
+                variant='outlined'
+                onClick={handleNextClick}
+                disabled={index == (Videos.length - 1)}>Next</Button>
+            </Box>
           </Grid>
-          <Timeline video={Videos[0]} />
+          <Timeline video={video} />
         </Grid>
       </div>
     </ThemeProvider>

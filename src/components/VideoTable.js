@@ -12,7 +12,7 @@ function VideoPlayer({ videos }) {
   return (
     <MediaPlayer
       title={videos.songName}
-      src="http://127.0.0.1:5500/06062010064_conv.mp4" type="file"
+      src={videos.src} type="file"
 
       aspectRatio={16 / 9}
 
