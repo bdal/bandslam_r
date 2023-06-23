@@ -8,11 +8,16 @@ import { Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import { blue } from '@mui/material/colors';
 
-function VideoPlayer({ videos }) {
+function VideoPlayer({ video }) {
+const src = process.env.REACT_APP_MEDIA_SERVER_URL + 
+':' +   process.env.REACT_APP_MEDIA_SERVER_PORT + 
+'/' + video.src;
+
   return (
     <MediaPlayer
-      title={videos.songName}
-      src={videos.src} type="file"
+      title={video.songName}
+      src={src} type="file"
+      
 
       aspectRatio={16 / 9}
 
@@ -44,17 +49,17 @@ function VideoPlayer({ videos }) {
 //      );
 //}
 const handlePopOver = (event) => {
-  console.log('test test'); //to do insert 'playing here.
+  console.log('test test'); //to do insert 'playing/sound here.
 }
 
-const VideoTable = ({ videos }) => {
+const VideoTable = ({ video }) => {
   return (
     // <Grid container alignItems={'center'} direction={'column'}>
     <Box onMouseEnter={handlePopOver} sx={{
       width: 600,
       height: 338
     }}>
-      <VideoPlayer on videos={videos} />
+      <VideoPlayer on video={video} />
     </Box>
     // </Grid>
   )

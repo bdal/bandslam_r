@@ -39,7 +39,8 @@ const Videos = [
     "songName": "People of the Sun",
     "venueName": "Finsbury Park",
     "videoName": "06062010064 - RATM - People of the Sun.mp4",
-    "src": "http://127.0.0.1:5500/06062010064_conv.mp4"
+    // "src": "http://127.0.0.1:5500/06062010064_conv.mp4"
+    "src": "06062010064_conv.mp4"
   },
   {
     "artistName": "Vampire Weekend",
@@ -52,7 +53,7 @@ const Videos = [
     "songName": "A-Punk",
     "venueName": "Alexandra Palace",
     "videoName": "03122010140 - Vampire Weekend - A-Punk.mp4",
-    "src": "http://127.0.0.1:5500/03122010140_conv.mp4"
+    "src": "03122010140_conv.mp4"
   }
 ]
 
@@ -183,7 +184,7 @@ function App() {
                 Prev
               </NavButton>
             </NavBox>
-            <VideoTable videos={video} />
+            <VideoTable video={video} />
             <NavBox>
               <NavButton
                 onClick={handleNextClick}
