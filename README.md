@@ -79,3 +79,12 @@ https://favicon.io/favicon-converter/
 
 #### Skeleton
 https://mui.com/material-ui/react-skeleton/
+
+#### api
+fetch over axios
+"Fetch is a built-in API, hence we don't have to install or import anything. It's available in all modern browsers,"
+
+Fetch is a relatively low-level API, which allows for precise control of the loading process. It comes with the cost of having to handle two promises every time you use it.
+
+Fetch requires us to take one more step when handling responses, as it returns a promise, at which point we don't have the JSON data format which we require, hence the need for the .json() method.
+To access response data in Axios, we use the data property, whereas when using fetch(), final data can be named any variable.

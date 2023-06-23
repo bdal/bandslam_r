@@ -75,24 +75,28 @@ const allVideos = async (task) => {
 }
 
 
-function Heading({ video }) {
+function Heading({ video, isLoading, isError }) {
   return (
-    <Grid container alignItems={'center'} direction={'column'}>
-      <Grid>
-        <Typography variant='h5' >
-          <p>{video.artistName} - {video.venueName}</p>
-        </Typography>
+    (isLoading || isError)?
+      <Skeleton variant="text" sx={{ fontSize: '2rem' }} /> :
+      <Grid container alignItems={'center'} direction={'column'}>
+        <Grid>
+          <Typography variant='h5' >
+            <p>{video.artistName} - {video.venueName}</p>
+          </Typography>
+        </Grid>
       </Grid>
-    </Grid>
   )
 }
 
-function Timeline({ video }) {
+function Timeline({ video, isLoading, isError }) {
   return (
-    <Grid container alignItems={'center'} direction={'column'}>
-      <Typography variant='h6' ><p>{new Date(video.date).toDateString()}</p>
-      </Typography>
-    </Grid >
+    (isLoading || isError) ?
+      <Skeleton variant="text" sx={{ fontSize: '2rem' }} /> :
+      <Grid container alignItems={'center'} direction={'column'}>
+        <Typography variant='h6' ><p>{new Date(video.date).toDateString()}</p>
+        </Typography>
+      </Grid >
   )
 }
 
@@ -111,6 +115,8 @@ function NavBox({ children }) {
 function App() {
   const [index, setIndex] = useState(0);
   const [data, setData] = useState([]);   //for API response
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   function handleNextClick() {
     setIndex(index + 1)
@@ -137,7 +143,28 @@ function App() {
 
   //temp
   useEffect(() => {
-    fetch('https://localhost:7281/videosummary', {
+    (async () => {
+      try {
+        console.log('start loading');
+        setIsLoading(true);
+        const getVideos = await fetchVideos();
+        //setVideos;
+      } catch (err) {
+        console.log('error: ' + err.message);
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+        console.log('finish loading');
+      }
+    })();
+  }, []);
+
+
+
+
+  const fetchVideos = async () => {
+
+    const res = await fetch('https://localhost:7281/videosummary', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -145,36 +172,16 @@ function App() {
       },
       body: JSON.stringify({ "videoName": "sun" })
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setData(data);
-      })
-      .catch((err) => {
-        console.log('error: ' + err.message);
-      });
 
-  }, []);
+    const data = await res.json()
+    return data
+
+  }
 
 
   let video = Videos[index];
   console.log('video array length ' + Videos.length)
 
-//  to implement skeleton Component
-//  {
-//   item ? (
-//     <img
-//       style={{
-//         width: 210,
-//         height: 118,
-//       }}
-//       alt={item.title}
-//       src={item.src}
-//     />
-//   ) : (
-//     <Skeleton variant="rectangular" width={210} height={118} />
-//   );
-// }
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -186,7 +193,7 @@ function App() {
           }} >
           <img src={bandslamlogo} className="App-logo" alt="logo" />
           <SearchTable />
-          <Heading video={video} />
+          <Heading video={video} isLoading={isLoading} isError={isError} />
           <Grid container direction={'row'} justifyContent={'center'}>
             <NavBox>
               <NavButton
@@ -195,12 +202,7 @@ function App() {
                 Prev
               </NavButton>
             </NavBox>
-            {/* <VideoTable video={video} /> */}
-            <Stack spacing={1}>
-              <Skeleton variant="text" sx={{ fontSize: '2rem' }} />
-              <Skeleton variant="rounded" width={600} height={338} />
-              <Skeleton variant="text" sx={{ fontSize: '2rem' }} />
-            </Stack>
+            <VideoTable video={video} isLoading={isLoading} isError={isError} />
             <NavBox>
               <NavButton
                 onClick={handleNextClick}
@@ -209,9 +211,7 @@ function App() {
               </NavButton>
             </NavBox>
           </Grid>
-          <Timeline video={video} />
-          {/* <p>REACT_APP_MEDIA_SERVER_URL: {process.env.REACT_APP_MEDIA_SERVER_URL}</p>
-          <p>REACT_APP_MEDIA_SERVER_PORT: {process.env.REACT_APP_MEDIA_SERVER_PORT}</p> */}
+          <Timeline video={video} isLoading={isLoading} isError={isError} />
         </Grid>
       </div>
     </ThemeProvider>

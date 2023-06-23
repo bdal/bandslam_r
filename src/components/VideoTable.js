@@ -7,6 +7,7 @@ import { MediaCommunitySkin, MediaOutlet, MediaPlayer } from '@vidstack/react';
 import { Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import { blue } from '@mui/material/colors';
+import Skeleton from '@mui/material/Skeleton';
 
 function VideoPlayer({ video }) {
 const src = process.env.REACT_APP_MEDIA_SERVER_URL + 
@@ -52,15 +53,21 @@ const handlePopOver = (event) => {
   console.log('test test'); //to do insert 'playing/sound here.
 }
 
-const VideoTable = ({ video }) => {
+const VideoTable = ({ video , isLoading, isError}) => {
   return (
     // <Grid container alignItems={'center'} direction={'column'}>
-    <Box onMouseEnter={handlePopOver} sx={{
-      width: 600,
-      height: 338
-    }}>
-      <VideoPlayer on video={video} />
-    </Box>
+    isLoading ?
+    <Skeleton variant="rounded" width={600} height={338} /> :
+    (isError ?
+      <p>There was an error trying to load the videos.</p> : 
+      <Box onMouseEnter={handlePopOver} sx={{
+        width: 600,
+        height: 338
+      }}>
+        <VideoPlayer on video={video} />
+      </Box>)
+     
+       
     // </Grid>
   )
 }
