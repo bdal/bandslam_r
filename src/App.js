@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import bandslamlogo from './1058591_c.png';
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Component } from 'react';
 
 // import Button from './components/Button';
 import BandslamTable from './components/BandslamTable';
@@ -17,6 +17,8 @@ import Grid from '@mui/material/Grid'; // Grid version 1
 import Container from '@mui/material/Container';
 import { Typography } from '@mui/material';
 import Button from '@mui/material/Button';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -135,7 +137,7 @@ function App() {
 
   //temp
   useEffect(() => {
-    fetch('https://localhost:7281/videos', {
+    fetch('https://localhost:7281/videosummary', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -156,14 +158,23 @@ function App() {
 
 
   let video = Videos[index];
-  console.log('length ' + Videos.length)
+  console.log('video array length ' + Videos.length)
 
-  // console.log('vars' + `${process.env.REACT_APP_PRODUCTION_DATABASE_URL})
-
-  // var host = `${process.env.REACT_APP_HOST}`
-  const host = process.env.REACT_APP_HOST;
-
-  console.log(host)
+//  to implement skeleton Component
+//  {
+//   item ? (
+//     <img
+//       style={{
+//         width: 210,
+//         height: 118,
+//       }}
+//       alt={item.title}
+//       src={item.src}
+//     />
+//   ) : (
+//     <Skeleton variant="rectangular" width={210} height={118} />
+//   );
+// }
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -184,7 +195,12 @@ function App() {
                 Prev
               </NavButton>
             </NavBox>
-            <VideoTable video={video} />
+            {/* <VideoTable video={video} /> */}
+            <Stack spacing={1}>
+              <Skeleton variant="text" sx={{ fontSize: '2rem' }} />
+              <Skeleton variant="rounded" width={600} height={338} />
+              <Skeleton variant="text" sx={{ fontSize: '2rem' }} />
+            </Stack>
             <NavBox>
               <NavButton
                 onClick={handleNextClick}

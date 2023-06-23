@@ -76,3 +76,6 @@ client side env variables arent available unless prefixed with 'REACT_APP'
 
 #### Favicon
 https://favicon.io/favicon-converter/
+
+#### Skeleton
+https://mui.com/material-ui/react-skeleton/
