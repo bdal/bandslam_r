@@ -68,3 +68,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+###
+#### Environment Variables
+.env.development wont work unless a '.env' file exists
+client side env variables arent available unless prefixed with 'REACT_APP'
+
+#### Favicon
+https://favicon.io/favicon-converter/

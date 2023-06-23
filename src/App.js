@@ -1,6 +1,7 @@
 import logo from './logo.svg';
+import bandslamlogo from './1058591_c.png';
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // import Button from './components/Button';
 import BandslamTable from './components/BandslamTable';
@@ -55,6 +56,22 @@ const Videos = [
   }
 ]
 
+
+// Get Videos
+const allVideos = async (task) => {
+  const res = await fetch('https://localhost:7281/videos', {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify('')
+  })
+
+  const data = await res.json() //data that is returned from /videos endpoint
+
+}
+
+
 function Heading({ video }) {
   return (
     <Grid container alignItems={'center'} direction={'column'}>
@@ -90,6 +107,7 @@ function NavBox({ children }) {
 
 function App() {
   const [index, setIndex] = useState(0);
+  const [data, setData] = useState([]);   //for API response
 
   function handleNextClick() {
     setIndex(index + 1)
@@ -112,8 +130,39 @@ function App() {
     )
   }
 
+
+
+  //temp
+  useEffect(() => {
+    fetch('https://localhost:7281/videos', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({ "videoName": "sun" })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setData(data);
+      })
+      .catch((err) => {
+        console.log('error: ' + err.message);
+      });
+
+  }, []);
+
+
   let video = Videos[index];
   console.log('length ' + Videos.length)
+
+  // console.log('vars' + `${process.env.REACT_APP_PRODUCTION_DATABASE_URL})
+
+  // var host = `${process.env.REACT_APP_HOST}`
+  const host = process.env.REACT_APP_HOST;
+
+  console.log(host)
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -123,6 +172,7 @@ function App() {
           sx={{
             minHeight: '100vh'
           }} >
+          <img src={bandslamlogo} className="App-logo" alt="logo" />
           <SearchTable />
           <Heading video={video} />
           <Grid container direction={'row'} justifyContent={'center'}>
@@ -143,6 +193,8 @@ function App() {
             </NavBox>
           </Grid>
           <Timeline video={video} />
+          {/* <p>REACT_APP_MEDIA_SERVER_URL: {process.env.REACT_APP_MEDIA_SERVER_URL}</p>
+          <p>REACT_APP_MEDIA_SERVER_PORT: {process.env.REACT_APP_MEDIA_SERVER_PORT}</p> */}
         </Grid>
       </div>
     </ThemeProvider>
