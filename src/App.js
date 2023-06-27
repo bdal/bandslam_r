@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import bandslamlogo from './1058591_c.png';
 import './App.css';
 import { useState, useEffect, Component } from 'react';
+import axios from 'axios';
 
 // import Button from './components/Button';
 import BandslamTable from './components/BandslamTable';
@@ -29,72 +30,26 @@ const darkTheme = createTheme({
   },
 });
 
-const Videos = [
-  {
-    "artistName": "Rage Against the Machine",
-    "cityName": "London",
-    "countryName": "United Kingdom",
-    "date": "2010-06-06T00:00:00",
-    "fanFirstName": null,
-    "id": 2,
-    "path": "C:\\\\src\\\\0_bd\\\\cs\\\\bandslam\\\\vid",
-    "songName": "People of the Sun",
-    "venueName": "Finsbury Park",
-    "videoName": "06062010064 - RATM - People of the Sun.mp4",
-    // "src": "http://127.0.0.1:5500/06062010064_conv.mp4"
-    "src": "06062010064_conv.mp4"
-  },
-  {
-    "artistName": "Vampire Weekend",
-    "cityName": "London",
-    "countryName": "United Kingdom",
-    "date": "2010-12-03T00:00:00",
-    "fanFirstName": null,
-    "id": 1,
-    "path": "C:\\\\src\\\\0_bd\\\\cs\\\\bandslam\\\\vid",
-    "songName": "A-Punk",
-    "venueName": "Alexandra Palace",
-    "videoName": "03122010140 - Vampire Weekend - A-Punk.mp4",
-    "src": "03122010140_conv.mp4"
-  }
-]
-
-
-// Get Videos
-const allVideos = async (task) => {
-  const res = await fetch('https://localhost:7281/videos', {
-    method: 'POST',
-    headers: {
-      'Content-type': 'application/json'
-    },
-    body: JSON.stringify('')
-  })
-
-  const data = await res.json() //data that is returned from /videos endpoint
-
-}
-
-
-function Heading({ video, isLoading, isError }) {
+function Heading({ video, index, isLoading, isError }) {
   return (
-    (isLoading || isError)?
+    (isLoading || isError || video === undefined) ?
       <Skeleton variant="text" sx={{ fontSize: '2rem' }} /> :
       <Grid container alignItems={'center'} direction={'column'}>
         <Grid>
           <Typography variant='h5' >
-            <p>{video.artistName} - {video.venueName}</p>
+            <p>{video.data[index].artistName} - {video.data[index].venueName}</p>
           </Typography>
         </Grid>
       </Grid>
   )
 }
 
-function Timeline({ video, isLoading, isError }) {
+function Timeline({ video, index, isLoading, isError }) {
   return (
-    (isLoading || isError) ?
+    (isLoading || isError || video === undefined) ?
       <Skeleton variant="text" sx={{ fontSize: '2rem' }} /> :
       <Grid container alignItems={'center'} direction={'column'}>
-        <Typography variant='h6' ><p>{new Date(video.date).toDateString()}</p>
+        <Typography variant='h6' ><p>{new Date(video.data[index].date).toDateString()}</p>
         </Typography>
       </Grid >
   )
@@ -114,9 +69,10 @@ function NavBox({ children }) {
 
 function App() {
   const [index, setIndex] = useState(0);
-  const [data, setData] = useState([]);   //for API response
+  const [servVideos, setServVideos] = useState();   //for API response
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [bands, setBands] = useState();
 
   function handleNextClick() {
     setIndex(index + 1)
@@ -139,49 +95,51 @@ function App() {
     )
   }
 
-
-
-  //temp
+ 
   useEffect(() => {
-    (async () => {
+    const getData = async () => {
       try {
-        console.log('start loading');
+        console.log('start loading', servVideos === undefined);
         setIsLoading(true);
-        const getVideos = await fetchVideos();
-        //setVideos;
+        const videosFromServer = await fetchVideos();
+
+        setServVideos(videosFromServer);
+
+        const bandsFromServer = videosFromServer.data.map((video) => (
+           video.artistName
+        ))
+        console.log('bands', bandsFromServer);  
+        setBands(bandsFromServer);
+
+        console.log('result: ', videosFromServer)
       } catch (err) {
         console.log('error: ' + err.message);
         setIsError(true);
       } finally {
         setIsLoading(false);
-        console.log('finish loading');
+        console.log('finish loading', servVideos === undefined);
       }
-    })();
-  }, []);
+    };
 
+    getData();
 
+  }, []); //this empty array is for if you had any dependencies
 
 
   const fetchVideos = async () => {
-
     const res = await fetch('https://localhost:7281/videosummary', {
       method: 'POST',
       mode: 'cors',
       headers: {
         'Content-type': 'application/json'
       },
-      body: JSON.stringify({ "videoName": "sun" })
+      body: JSON.stringify({ "videoName": "" })
     })
 
     const data = await res.json()
+    console.log(data)
     return data
-
   }
-
-
-  let video = Videos[index];
-  console.log('video array length ' + Videos.length)
-
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -192,26 +150,28 @@ function App() {
             minHeight: '100vh'
           }} >
           <img src={bandslamlogo} className="App-logo" alt="logo" />
-          <SearchTable />
-          <Heading video={video} isLoading={isLoading} isError={isError} />
+          <SearchTable isLoading={isLoading} isError={isError} bands={bands}/>
+          <Heading video={servVideos} index={index} isLoading={isLoading} isError={isError} />
           <Grid container direction={'row'} justifyContent={'center'}>
             <NavBox>
               <NavButton
                 onClick={handlePrevClick}
-                disabled={index == 0}>
+                disabled={servVideos === undefined ||
+                  index == 0}>
                 Prev
               </NavButton>
             </NavBox>
-            <VideoTable video={video} isLoading={isLoading} isError={isError} />
+            <VideoTable video={servVideos} index={index} isLoading={isLoading} isError={isError} />
             <NavBox>
               <NavButton
                 onClick={handleNextClick}
-                disabled={index == (Videos.length - 1)}>
+                disabled={servVideos === undefined ||
+                  index == (servVideos?.data.length - 1)}>
                 Next
               </NavButton>
             </NavBox>
           </Grid>
-          <Timeline video={video} isLoading={isLoading} isError={isError} />
+          <Timeline video={servVideos} index={index} isLoading={isLoading} isError={isError} />
         </Grid>
       </div>
     </ThemeProvider>

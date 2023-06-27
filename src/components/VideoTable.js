@@ -10,53 +10,38 @@ import { blue } from '@mui/material/colors';
 import Skeleton from '@mui/material/Skeleton';
 
 function VideoPlayer({ video }) {
-const src = process.env.REACT_APP_MEDIA_SERVER_URL + 
-':' +   process.env.REACT_APP_MEDIA_SERVER_PORT + 
-'/' + video.src;
+
+const src = (video === undefined || video === null) ?
+'' : process.env.REACT_APP_MEDIA_SERVER_URL + 
+':' +   process.env.REACT_APP_MEDIA_SERVER_PORT +   
+'/' + video.videoName;
+
+const vidName = (video === undefined || video === null) ?
+'' : video.songName;
 
   return (
+    //TODO: if fail to return video content, also display error message.
     <MediaPlayer
-      title={video.songName}
-      src={src} type="file"
-      
-
+      title={vidName}
+      src={src} type="file"      
       aspectRatio={16 / 9}
-
     >
       <MediaOutlet>
-
       </MediaOutlet>
       <MediaCommunitySkin />
-    </MediaPlayer>);
+    </MediaPlayer>
+       
+    );
 }
 
-
-//import "vidstack/styles/base.css";
-//import "vidstack/styles/ui/buttons.css";
-//import "vidstack/styles/ui/sliders.css";
-
-//import { MediaPlayer, MediaOutlet } from "@vidstack/react";
-
-//function VideoPlayer()  {
-//    return(
-//        <MediaPlayer
-//          src="C:\\src\\0_bd\\cs\\bandslam\\vid\\06062010064.mp4"
-//          poster="https://customer-m033z5x00ks6nunl.cloudflarestream.com/b236bde30eb07b9d01318940e5fc3eda/thumbnails/thumbnail.jpg"
-//          controls
-//          aspectRatio={16/9}
-//        >
-//          <MediaOutlet />
-//        </MediaPlayer>
-//      );
-//}
 const handlePopOver = (event) => {
   console.log('test test'); //to do insert 'playing/sound here.
 }
 
-const VideoTable = ({ video , isLoading, isError}) => {
+const VideoTable = ({ video , index, isLoading, isError}) => {
+
   return (
-    // <Grid container alignItems={'center'} direction={'column'}>
-    isLoading ?
+    (isLoading || video === undefined) ?
     <Skeleton variant="rounded" width={600} height={338} /> :
     (isError ?
       <p>There was an error trying to load the videos.</p> : 
@@ -64,11 +49,8 @@ const VideoTable = ({ video , isLoading, isError}) => {
         width: 600,
         height: 338
       }}>
-        <VideoPlayer on video={video} />
+        <VideoPlayer on video={video.data[index]} />
       </Box>)
-     
-       
-    // </Grid>
   )
 }
 

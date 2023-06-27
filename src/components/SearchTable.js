@@ -3,47 +3,36 @@ import React from 'react'
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Grid } from '@mui/material';
+import Skeleton from '@mui/material/Skeleton';
 
-function SearchBarOld() {
-    return (
-        <form>
-            <input type="text" placeholder='Search...' />
-        </form>
-    )
-}
+export function MuiComboBox({bands}) {
 
-export function MuiComboBox() {
   return (
     <Autocomplete
       disablePortal
       id="combo-box-demo"
-      options={top100Films}
-      sx={{ width: '30%'
-    }}
-      renderInput={(params) => <TextField {...params} label="Search Gig"  />}
+      options={bands}
+      sx={{
+        width: '30%'
+      }}
+      renderInput={(params) => <TextField {...params} label="Search Gig" />}
     />
   );
 }
 
-const top100Films = [
-  { label: 'Vampire Weekend', venue: 'Alexandra Palace' },
-  { label: 'Rage Against the Machine', venue: 'Finsbury Park'}
-]
+// const top100Films = [
+//   { label: 'Vampire Weekend', venue: 'Alexandra Palace' },
+//   { label: 'Rage Against the Machine', venue: 'Finsbury Park' }
+// ]
 
-function SearchBar() {
-  return (
-      <form>
-          <input type="text" placeholder='Search...' />
-      </form>
-  )
-}
+const SearchTable = ({isLoading, isError, bands}) => {
 
-const SearchTable = () => {
   return (
-    <Grid container alignItems={'center'} direction={'column'}>
-    
-        <MuiComboBox/>
-        </Grid>
+    (isLoading || isError || bands === undefined) ?
+      <Skeleton variant="text" sx={{ fontSize: '2rem' }} /> :
+      <Grid container alignItems={'center'} direction={'column'}>
+        <MuiComboBox bands={bands} />
+      </Grid>
   )
 }
 
