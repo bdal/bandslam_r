@@ -12,9 +12,10 @@ import Skeleton from '@mui/material/Skeleton';
 function VideoPlayer({ video }) {
 
 const src = (video === undefined || video === null) ?
-'' : process.env.REACT_APP_MEDIA_SERVER_URL + 
-':' +   process.env.REACT_APP_MEDIA_SERVER_PORT +   
-'/' + video.videoName;
+'' : 
+video.graphVideoSummaryDTO.url;
+
+console.log(video.graphVideoSummaryDTO.url);
 
 const vidName = (video === undefined || video === null) ?
 '' : video.songName;

@@ -72,6 +72,8 @@ function App() {
   const [servVideos, setServVideos] = useState();   //for API response
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  // TODO:
+  // Dont store 'bands' as another piece of state. rather get list of bands from 'servVideos'
   const [bands, setBands] = useState();
 
   function handleNextClick() {
