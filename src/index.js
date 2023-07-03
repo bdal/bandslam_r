@@ -15,6 +15,7 @@ import {
 
 import Root from './routes/root';
 import ErrorPage from './components/ErrorPage';
+import Upload from './Upload';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "home",
         element: <App/>
+      },
+      {
+        path: "upload",
+        element: <Upload/>
       }
     ]
   },
