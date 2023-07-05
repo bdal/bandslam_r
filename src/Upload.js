@@ -6,13 +6,19 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid'; // Grid version 1
 import bandslamlogo from './1058591_c.png';
 import FilesDragAndDrop from '@yelysei/react-files-drag-and-drop';
-import { Input } from '@mui/material';
+import { Box, Button, Input, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { Typography } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import CustomButton from './components/CustomButton';
 
 import './Upload.css'
 import { hasPointerEvents } from '@testing-library/user-event/dist/utils';
 import { red } from '@mui/material/colors';
+import axios from 'axios';
+import { Form } from 'react-router-dom';
 
 const darkTheme = createTheme({
     palette: {
@@ -39,7 +45,7 @@ function CustomFilesDragAndDrop({ onUpload, count, formats, children, setisParen
     const drop = useRef(null); //initial state is null
     const drag = useRef(null);
     const [dragging, setDragging] = useState(false);
-    const [isError, setisError] = useState(false);
+    const [fileStatus, setfileStatus] = useState('empty');  //empty, error, success
 
     const preventDefaults = (e) => {
         e.preventDefault();
@@ -63,7 +69,7 @@ function CustomFilesDragAndDrop({ onUpload, count, formats, children, setisParen
 
             if (count && count < files.length) {
                 console.log(`Only ${count} file${count !== 1 ? 's' : ''} can be uploaded at a time`);
-                setisError(true);
+                setfileStatus('error');
                 setisParentError('multipleError');
                 return;
             }
@@ -71,12 +77,14 @@ function CustomFilesDragAndDrop({ onUpload, count, formats, children, setisParen
             // check if some uploaded file is not in one of the allowed formats
             if (formats && files.some((file) => !formats.some((format) => file.name.toLowerCase().endsWith(format.toLowerCase())))) {
                 console.log(`Only following file formats are acceptable: ${formats.join(', ')}`);
-                setisError(true);
+                setfileStatus('error');
                 setisParentError('formatError');
                 return;
             }
 
             if (files && files.length) {
+                setfileStatus('success');
+                setisParentError('success');
                 onUpload(files);
             }
         }
@@ -86,7 +94,7 @@ function CustomFilesDragAndDrop({ onUpload, count, formats, children, setisParen
             console.log('handleDragEnter (1 PARENT)');
 
             setDragging(true);
-            setisError(false);
+            setfileStatus('empty');
             setisParentError();
         }
 
@@ -118,8 +126,17 @@ function CustomFilesDragAndDrop({ onUpload, count, formats, children, setisParen
     // to only register even listener once the component is mounted.
     // otherwise it will run on every render
 
-    function ReturnEmoji({ isError }) {
-        if (isError) {
+    function ReturnEmoji({ fileStatus }) {
+        if (fileStatus === 'success') {
+            return (<span
+                style={{ pointerEvents: 'none' }}
+                role='img'
+                aria-label='emoji'
+                className='area__icon'
+            >&#129321;</span>)
+        }
+
+        if (fileStatus === 'error') {
             return (<span
                 style={{ pointerEvents: 'none' }}
                 role='img'
@@ -127,13 +144,14 @@ function CustomFilesDragAndDrop({ onUpload, count, formats, children, setisParen
                 className='area__icon'
             >&#128557;</span>)
         }
+
         return (
             <span
                 style={{ pointerEvents: 'none' }}
                 role='img'
                 aria-label='emoji'
                 className='area__icon'
-            >&#128526;</span>
+            >&#128528;</span>
         )
     }
 
@@ -142,7 +160,7 @@ function CustomFilesDragAndDrop({ onUpload, count, formats, children, setisParen
         {dragging ?
             'Yeah!' :
             'Drop it like its hot'}
-        <ReturnEmoji isError={isError} />
+        <ReturnEmoji fileStatus={fileStatus} />
         {children}
         {/* <Grid container alignItems={'center'} direction={'column'}>
         <Typography  variant='h6' color="red">`Only following file formats are acceptable: mp4</Typography>
@@ -179,11 +197,98 @@ function ErrorText({ isParentError }) {
 }
 
 const Upload = () => {
-    const [isParentError, setisParentError] = useState(null)
+    const [isParentError, setisParentError] = useState(null);
+   
 
-    const onUpload = (files) => {
+    const uploadFilesOld = async (files) => {
+        console.log(files[0]);
+        const formData = new FormData();
+        formData.append('file', files[0]);
+
+        const res = await fetch('https://localhost:7281/videoupload', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'content-type': files[0].type,
+                'content-length': `${files[0].size}`
+            },
+            body: formData
+        })
+
+        const data = await res.json()
+        console.log(data)
+        return data
+    }
+
+    const uploadFiles = async (files) => {
+        console.log(files[0]);
+        const formData = new FormData();
+        formData.append('file', files[0]);
+
+        axios.post('https://localhost:7281/videoupload', formData)
+            .then((response) => {
+                console.log('response', response.data)
+            })
+
+        // const data = await res.json()
+        // console.log(data)
+        // return data
+    }
+
+    const onUpload = async (files) => {
         console.log(files);
+        await uploadFiles(files);
     };
+
+
+
+    function InputFields({ isParentError }) {
+        const [artistName, setArtistName] = useState('');
+        const [songName, setSongName] = useState('');
+        const [venueName, setVenueName] = useState('');
+        const [cityName, setCityName] = useState('');
+        const [date, setDate] = useState('');
+
+        function handleFormSubmit() {
+            console.log('button click');
+            const formData = new FormData();
+            formData.append('artistName', artistName);
+            formData.append('songName', songName);
+            formData.append('venueName', venueName);
+            formData.append('cityName', cityName);
+            formData.append('date', date);
+
+            for (let obj of formData){
+                console.log(obj);
+            }
+        }        
+
+
+        return (
+            <Grid container
+                direction={'column'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                gap={'10px'}
+                sx={{
+                    width: '259px'
+                }} >
+                <Box gap={'10px'} />
+
+                <TextField id='artistName' fullWidth label="Artist Name" required value={artistName} onChange={(e) => setArtistName(e.target.value)}></TextField>
+                {/* variant='standard' */}
+                <TextField id='songName' fullWidth label="Song Name" required value={songName} onChange={(e) => setSongName(e.target.value)}></TextField>
+                <TextField id='venueName' fullWidth label="Venue Name" required value={venueName} onChange={(e) => setVenueName(e.target.value)}></TextField>
+                <TextField fullWidth label="City Name" required value={cityName} onChange={(e) => setCityName(e.target.value)}></TextField>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker fullWidth label="Date" required value={date}  onChange={(newValue) => setDate(newValue)}></DatePicker>
+                </LocalizationProvider>
+                <CustomButton
+                    onClick={handleFormSubmit}
+                    // disabled={isParentError != 'success'}
+                >Submit</CustomButton>
+            </Grid>)
+    }
 
     return (
         <ThemeProvider theme={darkTheme}>
@@ -200,6 +305,7 @@ const Upload = () => {
                         formats={['mp4']}
                         setisParentError={setisParentError} />
                     <ErrorText isParentError={isParentError} />
+                    <InputFields isParentError={isParentError} />
                 </Grid>
             </div>
         </ThemeProvider>
