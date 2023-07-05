@@ -1,6 +1,14 @@
 .Default {
   background-color: #282c34;
- 
+  height: 100%;
+}
+
+.centre-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
 }
 
 .App {
@@ -11,6 +19,8 @@
   height: 15vmin;
   pointer-events: none;
   padding: 4px;
+
+ 
 }
 
 @media (prefers-reduced-motion: no-preference) {

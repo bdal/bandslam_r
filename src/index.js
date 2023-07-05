@@ -15,7 +15,8 @@ import {
 
 import Root from './routes/root';
 import ErrorPage from './components/ErrorPage';
-import Upload from './Upload';
+import Upload from './components/upload/Upload';
+import Watch from './components/watch/Watch';
 
 const router = createBrowserRouter([
   {
@@ -24,12 +25,16 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage/>,
     children:[
       {
-        path: "home",
+        path: "viewer",
         element: <App/>
       },
       {
         path: "upload",
         element: <Upload/>
+      },
+      {
+        path: "temp",
+        element: <Watch/>
       }
     ]
   },

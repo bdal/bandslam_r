@@ -8,6 +8,7 @@ import axios from 'axios';
 import BandslamTable from './components/BandslamTable';
 import StackSandbox from './components/StackSandbox';
 import GridSandbox from './components/GridSandbox';
+import DefaultTemplate from './components/layout/DefaultTemplate';
 import SearchTable from './components/SearchTable';
 import VideoTable from './components/VideoTable';
 
@@ -97,7 +98,6 @@ function App() {
     )
   }
 
- 
   useEffect(() => {
     const getData = async () => {
       try {
@@ -108,9 +108,9 @@ function App() {
         setServVideos(videosFromServer);
 
         const bandsFromServer = videosFromServer.data.map((video) => (
-           video.artistName
+          video.artistName
         ))
-        console.log('bands', bandsFromServer);  
+        console.log('bands', bandsFromServer);
         setBands(bandsFromServer);
 
         console.log('result: ', videosFromServer)
@@ -144,39 +144,30 @@ function App() {
   }
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <div className='Default'>
-        <Grid container direction={'column'} justifyContent={'center'} alignItems={'center'}
-          sx={{
-            minHeight: '100vh'
-          }} >
-          <img src={bandslamlogo} className="App-logo" alt="logo" />
-          <SearchTable isLoading={isLoading} isError={isError} bands={bands}/>
-          <Heading video={servVideos} index={index} isLoading={isLoading} isError={isError} />
-          <Grid container direction={'row'} justifyContent={'center'}>
-            <NavBox>
-              <NavButton
-                onClick={handlePrevClick}
-                disabled={servVideos === undefined ||
-                  index == 0}>
-                Prev
-              </NavButton>
-            </NavBox>
-            <VideoTable video={servVideos} index={index} isLoading={isLoading} isError={isError} />
-            <NavBox>
-              <NavButton
-                onClick={handleNextClick}
-                disabled={servVideos === undefined ||
-                  index == (servVideos?.data.length - 1)}>
-                Next
-              </NavButton>
-            </NavBox>
-          </Grid>
-          <Timeline video={servVideos} index={index} isLoading={isLoading} isError={isError} />
-        </Grid>
-      </div>
-    </ThemeProvider>
+    <DefaultTemplate>
+      <SearchTable isLoading={isLoading} isError={isError} bands={bands} />
+      <Heading video={servVideos} index={index} isLoading={isLoading} isError={isError} />
+      <Grid container direction={'row'} justifyContent={'center'}>
+        <NavBox>
+          <NavButton
+            onClick={handlePrevClick}
+            disabled={servVideos === undefined ||
+              index == 0}>
+            Prev
+          </NavButton>
+        </NavBox>
+        <VideoTable video={servVideos} index={index} isLoading={isLoading} isError={isError} />
+        <NavBox>
+          <NavButton
+            onClick={handleNextClick}
+            disabled={servVideos === undefined ||
+              index == (servVideos?.data.length - 1)}>
+            Next
+          </NavButton>
+        </NavBox>
+      </Grid>
+      <Timeline video={servVideos} index={index} isLoading={isLoading} isError={isError} />
+    </DefaultTemplate>
   );
 }
 

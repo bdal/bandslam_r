@@ -8,10 +8,13 @@ const Root = () => {
             <nav>
                 <ul>
                     <li>
-                        <Link to ={`/home`}>Home</Link>
+                        <Link to ={`/viewer`}>Viewer</Link>
                     </li>
                     <li>
                         <Link to ={`/upload`}>Upload</Link>
+                    </li>
+                    <li>
+                        <Link to ={`/temp`}>Temp</Link>
                     </li>
                 </ul>
             </nav>
