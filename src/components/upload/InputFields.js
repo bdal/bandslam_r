@@ -8,7 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import CustomButton from '../CustomButton';
 
 
-const InputFields = ({ isParentError }) => {
+const InputFields = ({ isParentError, handleInputFields }) => {
     const [artistName, setArtistName] = useState('');
     const [songName, setSongName] = useState('');
     const [venueName, setVenueName] = useState('');
@@ -23,10 +23,9 @@ const InputFields = ({ isParentError }) => {
         formData.append('venueName', venueName);
         formData.append('cityName', cityName);
         formData.append('date', date);
+        handleInputFields(formData);
 
-        for (let obj of formData) {
-            console.log(obj);
-        }
+       
     }
 
     return (

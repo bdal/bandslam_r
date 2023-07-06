@@ -9,7 +9,20 @@ import UploadErrorText from './UploadErrorText';
 import InputFields from './InputFields';
 
 const Upload = () => {
+
+    
     const [isParentError, setisParentError] = useState(null);
+    // const [videoData, setVideoData] = useState(null);
+    const parentFormData = new FormData();
+    const [values, setValues] = useState(initialValues);
+
+    const initialValues = {
+        artistName: "",
+        songName: "",
+        venueName: "",
+        cityName: "",
+        date: ""
+    };
 
     const uploadFiles = async (files) => {
         console.log(files[0]);
@@ -28,8 +41,16 @@ const Upload = () => {
 
     const onUpload = async (files) => {
         console.log(files);
-        await uploadFiles(files);
+        //await uploadFiles(files);
     };
+    
+    const handleInputFields = (formData) => {       
+        // parentFormData.append(parentFormData);
+        for (let obj of formData) {
+            console.log(obj);
+            formData.append(obj[0], obj[1]);
+        }
+    }
 
     return (
         <DefaultTemplate>
@@ -37,13 +58,15 @@ const Upload = () => {
                 onUpload={onUpload}
                 count={1}
                 formats={['mp4']}
-                setisParentError={setisParentError} />
+                setisParentError={setisParentError}>
+            </DragAndDropFiles>
             <UploadErrorText isParentError={isParentError} />
-            <InputFields isParentError={isParentError} />
+            <InputFields
+                isParentError={isParentError}
+                handleInputFields={handleInputFields} />
         </DefaultTemplate>
     );
 }
-
 
 export default Upload
 

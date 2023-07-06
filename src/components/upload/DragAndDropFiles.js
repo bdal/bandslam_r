@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import Emoji from './Emoji';
 import './Upload.css'
 
-const DragAndDropFiles = ({ onUpload, count, formats, children, setisParentError }) => {
+const DragAndDropFiles = ({ onUpload, count, formats, setisParentError, children }) => {
     const drop = useRef(null); //initial state is null
     const [dragging, setDragging] = useState(false);
     const [fileStatus, setfileStatus] = useState('empty');  //empty, error, success
