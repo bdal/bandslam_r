@@ -5,7 +5,7 @@ import { Box, Button, Input, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import CustomButton from '../CustomButton';
+
 
 
 const InputFields = ({ isParentError, handleInputFields }) => {
@@ -15,18 +15,21 @@ const InputFields = ({ isParentError, handleInputFields }) => {
     const [cityName, setCityName] = useState('');
     const [date, setDate] = useState('');
 
-    function handleFormSubmit() {
-        console.log('button click');
-        const formData = new FormData();
-        formData.append('artistName', artistName);
-        formData.append('songName', songName);
-        formData.append('venueName', venueName);
-        formData.append('cityName', cityName);
-        formData.append('date', date);
-        handleInputFields(formData);
+    useEffect(() => {
+        console.log('change to input state');
 
-       
-    }
+        handleInputFields({
+            artistName,
+            songName,
+            venueName,
+            cityName,
+            date
+        });
+    }, [artistName,
+        songName,
+        venueName,
+        cityName,
+        date])
 
     return (
         <Grid container
@@ -46,10 +49,6 @@ const InputFields = ({ isParentError, handleInputFields }) => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker fullWidth label="Date" required value={date} onChange={(newValue) => setDate(newValue)}></DatePicker>
             </LocalizationProvider>
-            <CustomButton
-                onClick={handleFormSubmit}
-            // disabled={isParentError != 'success'}
-            >Submit</CustomButton>
         </Grid>)
 }
 
