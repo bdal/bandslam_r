@@ -8,6 +8,14 @@ import DragAndDropFiles from './DragAndDropFiles';
 import UploadErrorText from './UploadErrorText';
 import InputFields from './InputFields';
 
+const initialValues = {
+    artistName: "",
+    songName: "",
+    venueName: "",
+    cityName: "",
+    date: ""
+};
+
 const Upload = () => {
 
     
@@ -16,13 +24,7 @@ const Upload = () => {
     const parentFormData = new FormData();
     const [values, setValues] = useState(initialValues);
 
-    const initialValues = {
-        artistName: "",
-        songName: "",
-        venueName: "",
-        cityName: "",
-        date: ""
-    };
+
 
     const uploadFiles = async (files) => {
         console.log(files[0]);
@@ -48,7 +50,7 @@ const Upload = () => {
         // parentFormData.append(parentFormData);
         for (let obj of formData) {
             console.log(obj);
-            formData.append(obj[0], obj[1]);
+            // formData.append(obj[0], obj[1]);
         }
     }
 
